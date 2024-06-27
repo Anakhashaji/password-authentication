@@ -1,0 +1,123 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+
+    <div>
+        <p><strong>First Name:</strong> {{ user_profile_info.0 }}</p>
+        <p><strong>Last Name:</strong> {{ user_profile_info.1 }}</p>
+        <p><strong>Phone Number:</strong> {{ user_profile_info.2 }}</p>
+        <p><strong>Gender:</strong> {{ user_profile_info.3 }}</p>
+        <p><strong>Age:</strong> {{ user_profile_info.4 }}</p>
+    </div>
+
+    <!- Add more content or features as needed ->
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .logout-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        
+        .logout-button:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Information</th>
+            </tr>
+            <tr>
+                <td>First Name</td>
+                <td>{{ user_profile_info.1 }}</td>
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                <td>{{ user_profile_info.2 }}</td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td>{{ user_profile_info.3 }}</td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>{{ user_profile_info.4 }}</td>
+            </tr>
+            <tr>
+                <td>Age</td>
+                <td>{{ user_profile_info.5 }}</td>
+            </tr>
+        </table>
+
+        <!-- Add more content or features as needed -->
+        <a class="logout-button" href="{{ url_for('updateuser',user_id=user_profile_info[0]) }}">Update</a>
+
+        <a class="logout-button" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</body>
+</html>

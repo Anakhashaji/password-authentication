@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <title>Selected Pattern</title>
+    <style>
+        /* Add your custom styles for the selected pattern if needed */
+        .canvas-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+
+        .canvas-piece {
+            width: 100%;
+            height: 100px; /* Adjust the size of each piece */
+            position: relative;
+            cursor: pointer;
+        }
+
+        .canvas-piece img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .canvas-piece.selected {
+            border: 2px solid blue; /* Add a border to indicate selection */
+        }
+
+        .gallery-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .gallery-buttons button {
+            margin: 0 5px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selected Pattern</h1>
+
+    <!-- Display the selected image -->
+    <div class="canvas-container" id="canvasContainer"></div>
+
+    <!-- Buttons for Clear, Back, and Submit -->
+    <div class="gallery-buttons">
+        <button onclick="clearSelection()">Clear</button>
+        <button onclick="goBack()">Back</button>
+        <button onclick="submitPattern()">Submit</button>
+    </div>
+
+    <script>
+        // JavaScript functions for selected pattern frame
+        function clearSelection() {
+            // Implement logic for clearing the selection
+            document.querySelectorAll('.canvas-piece.selected').forEach(piece => {
+                piece.classList.remove('selected');
+            });
+        }
+
+        function goBack() {
+            // Implement logic for going back to the select image frame
+            window.location.href = "{{ url_for('select_image') }}";
+        }
+
+        function selectGridPiece(row, col) {
+            // Implement logic for handling the selection of a grid piece
+            var selectedPiece = document.querySelector('.canvas-piece[data-row="' + row + '"][data-col="' + col + '"]');
+            selectedPiece.classList.toggle('selected');
+        }
+
+        function submitPattern() {
+            // Implement logic for submitting the pattern
+            // You may want to send data to the server using AJAX
+
+            var selectedPieces = document.querySelectorAll('.canvas-piece.selected');
+
+            // Extract information from the selected pieces and send to the server
+            var selectedData = [];
+            selectedPieces.forEach(piece => {
+                var row = piece.getAttribute('data-row');
+                var col = piece.getAttribute('data-col');
+                var imagePath = piece.querySelector('img').src;
+
+                selectedData.push({ row: row, col: col, imagePath: imagePath });
+            });
+
+            // Example: Send data to the server using AJAX
+            // Replace this with your actual endpoint and data format
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{{ url_for('selected_pattern') }}", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify({ selectedData: selectedData }));
+
+            // You can add additional logic based on the server response if needed
+
+            // For demonstration purposes, redirect to the select image frame
+            window.location.href = "{{ url_for('select_image') }}";
+        }
+
+        // Function to cut the image into pieces
+        function cutImage(imagePath, rows, cols) {
+            const image = new Image();
+            image.src = imagePath;
+            image.onload = function() {
+                const canvasWidth = image.width / cols;
+                const canvasHeight = image.height / rows;
+
+                var canvasContainer = document.getElementById('canvasContainer');
+
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        const canvasPiece = document.createElement('div');
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        // Set canvas size without padding for border
+                        canvas.width = canvasWidth;
+                        canvas.height = canvasHeight;
+
+                        // Draw the image piece onto the canvas
+                        ctx.drawImage(
+                            image,
+                            col * canvasWidth,
+                            row * canvasHeight,
+                            canvasWidth,
+                            canvasHeight,
+                            0, // No padding for the left border
+                            0, // No padding for the top border
+                            canvasWidth,
+                            canvasHeight
+                        );
+
+                        // Set the data attributes for row and column
+                        canvasPiece.setAttribute('data-row', row);
+                        canvasPiece.setAttribute('data-col', col);
+
+                        // Set the class for styling and event handling
+                        canvasPiece.classList.add('canvas-piece');
+
+                        // Add click event listener for selection
+                        canvasPiece.addEventListener('click', function() {
+                            selectGridPiece(row, col);
+                        });
+
+                        // Append the canvas to the canvas piece
+                        canvasPiece.appendChild(canvas);
+
+                        // Append the canvas piece to the container
+                        canvasContainer.appendChild(canvasPiece);
+                    }
+                }
+            };
+        }
+
+        // Call the cutImage function when the page is loaded
+        cutImage("{{ img }}", 3, 3);
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">-->
+    <title>Select Image</title>
+    <style>
+        /* Add your custom styles for highlighting selected images if needed */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            height: 100%;
+            border: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .image-gallery img.selected {
+            border-color: blue;
+        }
+
+        /* Other styling for the page */
+        h1 {
+            text-align: center;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select Image</h1>
+
+    <!--Gallery of Images -->
+    <div class="image-gallery">
+        <!-- Replace these placeholders with actual image paths -->
+        <img src="{{ url_for('static', filename='img/cat.jpg') }}" alt="Image 1" onclick="selectImage(this)">
+        <img src="{{ url_for('static', filename='img/dog.jpg') }}" alt="Image 2" onclick="selectImage(this)">
+        <img src="{{ url_for('static', filename='img/rose.jpg') }}" alt="Image 3" onclick="selectImage(this)">
+       <!-- <img src="{{ url_for('static', filename='img/cat.jpg') }}" alt="Image 4" onclick="selectImage(this)">
+        <img src="{{ url_for('static', filename='img/rose.jpg') }}" alt="Image 5" onclick="selectImage(this)">
+        <img src="{{ url_for('static', filename='img/rose.jpg') }}" alt="Image 6" onclick="selectImage(this)">-->
+        
+        
+        <!-- Add more images as needed -->
+    </div>
+
+    <!-- Next button 
+    <button onclick="next()">Next</button>-->
+
+    <script>
+        // JavaScript functions for image selection
+        function selectImage(image) {
+            // Toggle a selected class to highlight the clicked image
+            image.classList.toggle('selected');
+            
+            // Get the image name from the alt attribute
+            var imageName = image.src;
+            
+
+            var url = new URL(window.location.href);
+            var user_id = url.searchParams.get("user_id");
+    
+            // Redirect to the selected_pattern page with the image name as a query parameter
+            window.location.href = "/selected_pattern?image=" + encodeURIComponent(imageName)+ "&user_id=" + encodeURIComponent(user_id);
+        }
+
+        
+    </script>
+</body>
+</html>                          

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      background-size: cover;
+     
+    }
+
+    .grid-item {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      cursor: pointer;
+      border: 1px solid white;
+    }
+
+   
+  </style>
+</head>
+<body>
+
+<div class="grid-container"  style="background-image: url({{ img }})">
+  <div class="grid-item" onclick="showValue(this, '0 0')"></div>
+  <div class="grid-item" onclick="showValue(this, '0 1')"></div>
+  <div class="grid-item" onclick="showValue(this, '0 2')"></div>
+  <div class="grid-item" onclick="showValue(this, '1 0')"></div>
+  <div class="grid-item" onclick="showValue(this, '1 1')"></div>
+  <div class="grid-item" onclick="showValue(this, '1 2')"></div>
+  <div class="grid-item" onclick="showValue(this, '2 0')"></div>
+  <div class="grid-item" onclick="showValue(this, '2 1')"></div>
+  <div class="grid-item" onclick="showValue(this, '2 2')"></div>
+</div>
+
+
+  
+<!--<script>
+  function showValue(element, value) {
+    // Send the selected data to the server using AJAX
+    var user_id = "{{ user_id }}";  // Access the user_id passed from the server
+    var selectedData = value;
+    var image="{{ img }}"
+
+    fetch('/selected_pattern?user_id=' + encodeURIComponent(user_id), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ selectedData: selectedData ,image: image}),
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response if needed
+      console.log(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+    alert(value);
+  }
+</script>-->
+<script>
+  function showValue(element, value) {
+    var user_id = "{{ user_id }}";
+    var selectedData = value;
+    var image = "{{ img }}";
+
+    fetch('/selected_pattern?user_id=' + encodeURIComponent(user_id), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ selectedData: selectedData, image: image }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log('Success:', data);
+                // Redirect to the login page after updating the data
+                window.location.href = "/login";
+            } else {
+                console.error('Error:', data.error);
+                // Handle the error case if needed
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+
+    alert(value);
+}
+
+</script>
+
+
+</body>
+</html>
+
+
